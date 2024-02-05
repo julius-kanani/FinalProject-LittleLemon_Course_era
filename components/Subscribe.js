@@ -1,8 +1,25 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Alert } from 'react-native';
+import { useState } from 'react';
+import { validateEmail } from '../utils';
 
 const welcomeScreenImage = require('../img/logo.png');
 
 const Subscribe = () => {
+    const [email, setEmail] = useState('');
+
+    const isEmailValid = validateEmail(email);
+
+    const handleSubscribe = () => {
+        Alert.alert(
+            "Thanks for subscribing, stay tuned!",
+            undefined,
+            [{ text: "OK", onPress: clearTextInput }]
+        );
+    };
+
+    const clearTextInput = () => {
+        setEmail('');
+    };
 
     return (
         <View style={styles.container} >
@@ -24,11 +41,16 @@ const Subscribe = () => {
             <TextInput 
                 style={styles.inputText}
                 placeholder='Type your email'
+                onChangeText={setEmail}
+                textContentType="emailAddress"
+                keyboardType="email-address"
+                
             />
 
             <TouchableOpacity 
-                style={styles.button} 
-                onPress={() => {}}>
+                style={[styles.button, !isEmailValid && styles.disabled]} 
+                disabled={!isEmailValid}
+                onPress={() => {handleSubscribe()}}>
                 <Text style={styles.SubscribeText} >Subscribe</Text>
             </TouchableOpacity>
         </View>
@@ -37,9 +59,9 @@ const Subscribe = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: .5,
+        flex: 1,
         backgroundColor: '#FFFFFF',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         alignItems: 'center',
         padding: 40
     },
@@ -61,13 +83,15 @@ const styles = StyleSheet.create({
     inputText: {
         borderWidth: 1,
         width: '100%',
-        padding: 5,
-        borderRadius: 5
+        padding: 8,
+        borderRadius: 5,
+        marginTop: 30
     },
 
     button: {
         width: '100%',
-        marginTop: 20
+        marginTop: 20,
+        padding: 10
         
     },
 
@@ -78,6 +102,11 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         textAlign: 'center',
         padding: 5,
+    },
+
+    disabled: {
+        backgroundColor: 'grey',
+        opacity: 0.5,
     }
 
 });
